@@ -1,0 +1,2 @@
+recursive-include graph_reporter/** *.js *.css *.json *.html
+prune tests

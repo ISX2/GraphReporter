@@ -1,0 +1,49 @@
+{
+  "src/ts/components/GraphReporter.tsx": {
+    "displayName": "GraphReporter",
+    "description": "Component meant to listen to the size of the canvas of a graph component with id = gId\r",
+    "props": {
+      "gId": {
+        "description": "The id of the graph-div whose traces should be updated.\r\n\r\n.. Note:\r\n\r\n  * if you use multiple graphs; each graph MUST have a unique id; otherwise we\r\n    cannot guarantee that resampling will work correctly.\r\n  * TraceUpdater will determine the html-graph-div by performing partial matching\r\n    on the \"id\" property (using `gdID`) of all divs with classname=\"dash-graph\".\r\n    It will select the first item of that match list; so if multiple same\r\n    graph-div IDs are used, or one graph-div-ID is a subset of the other (partial\r\n    matching) there is no guarantee that the correct div will be selected.",
+        "required": true,
+        "type": {
+          "name": "string",
+          "raw": "string"
+        }
+      },
+      "cWidth": {
+        "description": "",
+        "required": false,
+        "type": {
+          "name": "number",
+          "raw": "number"
+        }
+      },
+      "cHeight": {
+        "description": "",
+        "required": false,
+        "type": {
+          "name": "number",
+          "raw": "number"
+        }
+      },
+      "id": {
+        "description": "Unique ID to identify this component in Dash callbacks.",
+        "required": false,
+        "type": {
+          "name": "string",
+          "raw": "string"
+        }
+      },
+      "setProps": {
+        "description": "Update props to trigger callbacks.",
+        "required": true,
+        "type": {
+          "name": "func",
+          "raw": "(props: Record<string, any>) => void"
+        }
+      }
+    },
+    "isContext": false
+  }
+}
