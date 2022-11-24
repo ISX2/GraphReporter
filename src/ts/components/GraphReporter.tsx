@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {DashComponentProps} from '../props';
 
 type Props = {
@@ -33,31 +33,23 @@ const GraphReporter = (props: Props) => {
         setProps
     } = props;
     console.log("rendering graph-reporter");
-    //link this component to the graph canvas initially, when the GraphReporter component is loaded in
+
+    //link this component to the graph canvas initially, when the GraphReporter component is loaded in??
     // const [canvas, setCanvas] = useState(() => {
     //
-    //     return canvas
+    //     return canvas;
     // })
-    
-    // const [dimensions, setDimensions] = React.useState(() => {
-    //     return {
-    //         cWidth: window.innerWidth,
-    //         cHeight: window.innerHeight
-    //     }
-    // })
-    // const [dimensions, setDimensions] = React.useState(() => {
-    //     return {
-    //         cWidth: Number(canvas.getAttribute('width')),
-    //         cHeight: Number(canvas.getAttribute('height'))
-    //     }
-    // })
+
+    //use reference instead?
     let canvasRef = useRef(getCanvas(props.gId));
     console.log(canvasRef);
+
+
     const handleResize = (e) => {
         if (e.target) {
             const payload: Partial<Props> = {
-                cWidth: Number(canvasRef.current.getAttribute('width')),
-                cHeight: Number(canvasRef.current.getAttribute('height'))
+                cWidth: Number(e.getAttribute('width')),
+                cHeight: Number(e.current.getAttribute('height'))
             }
             // set height&width to state
             setProps(payload);
@@ -66,9 +58,11 @@ const GraphReporter = (props: Props) => {
         //     cHeight: Number(canvas.getAttribute('height')),
         //     cWidth: Number(canvas.getAttribute('width'))
         // })
-    }
-    /*useEffect(() => {
+    };
 
+
+    useEffect(() => {
+        //get Element from reference object
         let canvas = canvasRef.current;
         console.log(canvas);
 
@@ -79,15 +73,12 @@ const GraphReporter = (props: Props) => {
         return () => {
             canvas.removeEventListener('resize', handleResize);
         }
-    }, []);*/
+    }, []); //empty list as second argument to trigger onMount!
 
-    // const height = props.cHeight;
-    // const width = props.cWidth;
     console.log(`w:${props.cWidth}, h:${props.cHeight}`);
     return (
         <div id={id}>
             <div>GraphReporter finished rendering: canvas size = {props.cHeight} x {props.cWidth}</div>
-            <button onClick={handleResize}>update</button>
         </div>
     )
 }
