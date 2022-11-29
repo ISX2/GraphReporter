@@ -1,5 +1,5 @@
-import React, {useEffect, useRef} from 'react';
-import {DashComponentProps} from '../props';
+import React, { useEffect, useRef } from 'react';
+import { DashComponentProps } from '../props';
 
 type Props = {
     /**
@@ -34,48 +34,35 @@ const GraphReporter = (props: Props) => {
     } = props;
     console.log("rendering graph-reporter");
 
-    //link this component to the graph canvas initially, when the GraphReporter component is loaded in??
-    // const [canvas, setCanvas] = useState(() => {
-    //
-    //     return canvas;
-    // })
+    let canvasRef = null; //  = getCanvas(props.gId);
 
-    //use reference instead?
-    let canvasRef = useRef(getCanvas(props.gId));
-    console.log(canvasRef);
+    const handleResize = (element) => {
+        console.log("resize event");
 
+        // TODO add a debounce here
 
-    const handleResize = (e) => {
-        if (e.target) {
+        // Look whether the canvas is already available
+        if (!canvasRef) {
+            console.log("no canvas ref");
+            canvasRef = getCanvas(props.gId);
+        }
+        if (element.target) {
             const payload: Partial<Props> = {
-                cWidth: Number(e.getAttribute('width')),
-                cHeight: Number(e.current.getAttribute('height'))
+                cWidth: Number(canvasRef.getAttribute('width')),
+                cHeight: Number(canvasRef.getAttribute('height'))
             }
-            // set height&width to state
             setProps(payload);
         }
-        // setDimensions({
-        //     cHeight: Number(canvas.getAttribute('height')),
-        //     cWidth: Number(canvas.getAttribute('width'))
-        // })
     };
 
-
     useEffect(() => {
-        //get Element from reference object
-        let canvas = canvasRef.current;
-        console.log(canvas);
+        window.addEventListener('resize', handleResize);
 
-        canvas.addEventListener('resize', handleResize);
-
-        //initial call to get the canvas size?
-        // handleResize(canvas);
         return () => {
-            canvas.removeEventListener('resize', handleResize);
+            window.removeEventListener('resize', handleResize);
         }
     }, []); //empty list as second argument to trigger onMount!
 
-    console.log(`w:${props.cWidth}, h:${props.cHeight}`);
     return (
         <div id={id}>
             <div>GraphReporter finished rendering: canvas size = {props.cHeight} x {props.cWidth}</div>
@@ -95,15 +82,7 @@ const getCanvas = (gId) => {
         throw new SyntaxError("GraphReporter: no graphs with ID=\"" + gId + "\" found");
     }
     console.log('found some graphs');
-    // let plotDiv = graphDiv?.[0]?.getElementsByClassName('js-plotly-plot')?.[0] as HTMLDivElement;
-    // if (!isElement(plotDiv)) {
-    //     throw new Error(`Invalid gId '${gId}'`);
-    // }
-    // search for the canvas element within the graph div!
     let canvas = graphDiv[0]?.querySelector('rect[class*="nsewdrag drag"]') as Element;
-    // if (!isElement(canvas)) {
-    //     throw new Error(`canvas element not found in graph with id: '${gId}'`);
-    // }
     console.log(canvas);
     return canvas;
 }
