@@ -12,13 +12,19 @@ Keyword arguments:
 - id (string; optional):
     Unique ID to identify this component in Dash callbacks.
 
-- cHeight (number; optional)
+- cHeight (number; optional):
+    The height of the canvas, an HTML element found within the
+    dcc.Graph component.    Changes in this property can be used as
+    input for callbacks.
 
-- cWidth (number; optional)
+- cWidth (number; optional):
+    The width of the canvas, an HTML element found within the
+    dcc.Graph component.    Changes in this property can be used as
+    input for callbacks.
 
 - gId (string; required):
     The id of the graph-div whose traces should be updated.    ..
-    Note:      * if you use multiple graphs; each graph MUST have a
+    Note:    * if you use multiple graphs; each graph MUST have a
     unique id; otherwise we      cannot guarantee that resampling will
     work correctly.    * TraceUpdater will determine the
     html-graph-div by performing partial matching      on the \"id\"

@@ -16,14 +16,17 @@ Component meant to listen to the size of the canvas of a graph component with id
 \arguments{
 \item{id}{Character. Unique ID to identify this component in Dash callbacks.}
 
-\item{cHeight}{Numeric. }
+\item{cHeight}{Numeric. The height of the canvas, an HTML element found within the dcc.Graph component.
+
+Changes in this property can be used as input for callbacks}
 
-\item{cWidth}{Numeric. }
+\item{cWidth}{Numeric. The width of the canvas, an HTML element found within the dcc.Graph component.
+
+Changes in this property can be used as input for callbacks}
 
 \item{gId}{Character. The id of the graph-div whose traces should be updated.
 
 .. Note:
-
   * if you use multiple graphs; each graph MUST have a unique id; otherwise we
     cannot guarantee that resampling will work correctly.
   * TraceUpdater will determine the html-graph-div by performing partial matching

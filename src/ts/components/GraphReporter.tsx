@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect} from 'react';
 import {DashComponentProps} from '../props';
 
 type Props = {
@@ -6,7 +6,6 @@ type Props = {
      * The id of the graph-div whose traces should be updated.
      *
      * .. Note:
-     *
      *   * if you use multiple graphs; each graph MUST have a unique id; otherwise we
      *     cannot guarantee that resampling will work correctly.
      *   * TraceUpdater will determine the html-graph-div by performing partial matching
@@ -16,7 +15,17 @@ type Props = {
      *     matching) there is no guarantee that the correct div will be selected.
      */
     gId: string,
+    /**
+     * The width of the canvas, an HTML element found within the dcc.Graph component.
+     *
+     * Changes in this property can be used as input for callbacks
+     */
     cWidth?: number,
+    /**
+     * The height of the canvas, an HTML element found within the dcc.Graph component.
+     *
+     * Changes in this property can be used as input for callbacks
+     */
     cHeight?: number,
 } & DashComponentProps;
 
@@ -32,53 +41,59 @@ const GraphReporter = (props: Props) => {
         cHeight,
         setProps
     } = props;
-    console.log("rendering graph-reporter");
-
-    //link this component to the graph canvas initially, when the GraphReporter component is loaded in??
-    // const [canvas, setCanvas] = useState(() => {
-    //
-    //     return canvas;
-    // })
-
-    //use reference instead?
-    let canvasRef = useRef(getCanvas(props.gId));
-    console.log(canvasRef);
 
 
-    const handleResize = (e) => {
-        if (e.target) {
+    /**  initialise the reference to the canvas on null
+     *   => fill in once later, when the first resize event happens.
+     *   this defers the action of getting the canvas until later, which gives the dcc.Graph component time to load in
+     */
+    let canvasRef = null;
+
+    /**
+     *
+     * event handler function that is called when resizing the window containing the Dash application.
+     * It simply fetches the width and height of the canvas HTML element within the dcc.Graph, and stores them in their
+     * respective component properties
+     *
+     */
+    const handleResize = (element) => {
+        // Look whether the canvas is already available
+
+        if (!canvasRef) {
+            canvasRef = getCanvas(props.gId);
+        }
+        if (element.target) {
             const payload: Partial<Props> = {
-                cWidth: Number(e.getAttribute('width')),
-                cHeight: Number(e.current.getAttribute('height'))
+                cWidth: Number(canvasRef.getAttribute('width')),
+                cHeight: Number(canvasRef.getAttribute('height'))
             }
-            // set height&width to state
             setProps(payload);
         }
-        // setDimensions({
-        //     cHeight: Number(canvas.getAttribute('height')),
-        //     cWidth: Number(canvas.getAttribute('width'))
-        // })
     };
 
+    // This function will call the resize event handler only 200ms after the end of the resize movement
+    // It reduces the number of updates that will eventually be sent to the plotly-resampler back-end,
+    // optimizing this process
+    let timer;
+    const debounce = (element) => {
+        clearTimeout(timer);
+        timer = setTimeout(function(){
+            handleResize(element)
+        }, 200);
+    }
 
+    // using this hook to add event listeners. It corresponds to componentDidMount() and componentWillUnmount()
+    // in React class components when the second argument of the hook is set to an empty list
     useEffect(() => {
-        //get Element from reference object
-        let canvas = canvasRef.current;
-        console.log(canvas);
-
-        canvas.addEventListener('resize', handleResize);
-
-        //initial call to get the canvas size?
-        // handleResize(canvas);
+        window.addEventListener('resize', debounce);
         return () => {
-            canvas.removeEventListener('resize', handleResize);
+            window.removeEventListener('resize', debounce);
         }
-    }, []); //empty list as second argument to trigger onMount!
+    }, []);
 
-    console.log(`w:${props.cWidth}, h:${props.cHeight}`);
     return (
         <div id={id}>
-            <div>GraphReporter finished rendering: canvas size = {props.cHeight} x {props.cWidth}</div>
+            <div>{`canvas size = ${props.cHeight} x ${props.cWidth}`}</div>
         </div>
     )
 }
@@ -94,16 +109,6 @@ const getCanvas = (gId) => {
     } else if (graphDiv.length < 1) {
         throw new SyntaxError("GraphReporter: no graphs with ID=\"" + gId + "\" found");
     }
-    console.log('found some graphs');
-    // let plotDiv = graphDiv?.[0]?.getElementsByClassName('js-plotly-plot')?.[0] as HTMLDivElement;
-    // if (!isElement(plotDiv)) {
-    //     throw new Error(`Invalid gId '${gId}'`);
-    // }
-    // search for the canvas element within the graph div!
     let canvas = graphDiv[0]?.querySelector('rect[class*="nsewdrag drag"]') as Element;
-    // if (!isElement(canvas)) {
-    //     throw new Error(`canvas element not found in graph with id: '${gId}'`);
-    // }
-    console.log(canvas);
     return canvas;
 }

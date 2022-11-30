@@ -4,7 +4,7 @@
     "description": "Component meant to listen to the size of the canvas of a graph component with id = gId\r",
     "props": {
       "gId": {
-        "description": "The id of the graph-div whose traces should be updated.\r\n\r\n.. Note:\r\n\r\n  * if you use multiple graphs; each graph MUST have a unique id; otherwise we\r\n    cannot guarantee that resampling will work correctly.\r\n  * TraceUpdater will determine the html-graph-div by performing partial matching\r\n    on the \"id\" property (using `gdID`) of all divs with classname=\"dash-graph\".\r\n    It will select the first item of that match list; so if multiple same\r\n    graph-div IDs are used, or one graph-div-ID is a subset of the other (partial\r\n    matching) there is no guarantee that the correct div will be selected.",
+        "description": "The id of the graph-div whose traces should be updated.\r\n\r\n.. Note:\r\n  * if you use multiple graphs; each graph MUST have a unique id; otherwise we\r\n    cannot guarantee that resampling will work correctly.\r\n  * TraceUpdater will determine the html-graph-div by performing partial matching\r\n    on the \"id\" property (using `gdID`) of all divs with classname=\"dash-graph\".\r\n    It will select the first item of that match list; so if multiple same\r\n    graph-div IDs are used, or one graph-div-ID is a subset of the other (partial\r\n    matching) there is no guarantee that the correct div will be selected.",
         "required": true,
         "type": {
           "name": "string",
@@ -12,7 +12,7 @@
         }
       },
       "cWidth": {
-        "description": "",
+        "description": "The width of the canvas, an HTML element found within the dcc.Graph component.\r\n\r\nChanges in this property can be used as input for callbacks",
         "required": false,
         "type": {
           "name": "number",
@@ -20,7 +20,7 @@
         }
       },
       "cHeight": {
-        "description": "",
+        "description": "The height of the canvas, an HTML element found within the dcc.Graph component.\r\n\r\nChanges in this property can be used as input for callbacks",
         "required": false,
         "type": {
           "name": "number",

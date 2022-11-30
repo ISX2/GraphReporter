@@ -19,6 +19,7 @@
     "watch": "npm run build:js::dev -- --watch"
   },
   "devDependencies": {
+    "@testing-library/react-native": "^11.5.0",
     "@types/react": "^17.0.39",
     "css-loader": "^6.7.1",
     "npm-run-all": "^4.1.5",
